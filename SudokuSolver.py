@@ -11,36 +11,34 @@ def find_next_empty(board):
 
 def is_valid(board, guess, row, col):
 
-    row_vals = board[row]
-    if guess in row_vals:
-        return False
+    for i in range(9):
+        if board[row][i] == guess or board[i][col] == guess:
+            return False
     
-    col_vals = [board[i][col] for i in range(9)]
-    if guess in col_vals:
-        return False
-    
-    row_start = (row // 3) * 3
-    col_start = (col // 3) * 3
+    row_start, col_start = (row // 3) * 3, (col // 3) * 3
 
     for r in range(row_start, row_start + 3):
         for x in range(col_start, col_start + 3):
             if board[r][x] == guess:
                 return False
+    
     return True
 
 def solve_sudoku(board):
     
-    row, col = find_next_empty(board)
-
-    if row is None:
-        return True
+    empty_cell = find_next_empty(board)
     
+    if empty_cell[0] is None:
+        return True
+
+    row, col = empty_cell
     for guess in range(1, 10):
         if is_valid(board, guess, row, col):
             board[row][col] = guess
             if solve_sudoku(board):
                 return True
-        board[row][col] = 0 
+            board[row][col] = 0
+
     return False
 
 if __name__ == '__main__':
